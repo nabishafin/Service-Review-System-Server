@@ -3,7 +3,7 @@ const cors = require('cors')
 require('dotenv').config()
 const port = process.env.PORT || 5000
 const app = express()
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 app.use(cors())
 app.use(express.json())
 
@@ -39,12 +39,39 @@ async function run() {
         // data collct by user email
         app.get('/services/:email', async (req, res) => {
             const email = req.params.email
-            console.log(email)
             const query = { email: email }
             const result = await ServiceDB.find(query).toArray()
             res.send(result)
         })
 
+        // delete job post
+        app.delete('/service/:id', async (req, res) => {
+            const id = req.params.id
+            const query = { _id: new ObjectId(id) }
+            const result = await ServiceDB.deleteOne(query)
+            res.send(result)
+        })
+
+        // get one data by id
+        app.get('/service/:id', async (req, res) => {
+            const id = req.params.id
+            console.log(id)
+            const query = { _id: new ObjectId(id) }
+            const result = await ServiceDB.findOne(query)
+            res.send(result)
+        })
+
+        app.put('/update-job/:id', async (req, res) => {
+            const id = req.params.id
+            const jobdata = req.body
+            const updated = {
+                $set: jobdata,
+            }
+            const query = { _id: new ObjectId(id) }
+            const options = { upsert: true }
+            const result = await database.updateOne(query, updated, options)
+            res.send(result)
+        })
 
 
         await client.connect();
