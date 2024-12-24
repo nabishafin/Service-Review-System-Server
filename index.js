@@ -23,11 +23,19 @@ async function run() {
     try {
         const ServiceDB = client.db("ServiceDB").collection("service");
 
+        // data saved 
         app.post('/allSrvices', async (req, res) => {
             const Servicedata = req.body
             const result = await ServiceDB.insertOne(Servicedata)
             res.send(result)
         })
+
+        // get data for ui
+        app.get('/allService', async (req, res) => {
+            const result = await ServiceDB.find().toArray()
+            res.send(result)
+        })
+
 
         await client.connect();
         // Send a ping to confirm a successful connection
