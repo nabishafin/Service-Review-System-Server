@@ -32,9 +32,19 @@ async function run() {
 
         // get data for ui
         app.get('/allService', async (req, res) => {
-            const result = await ServiceDB.find().toArray()
+            const result = await ServiceDB.find().limit(6).toArray()
             res.send(result)
         })
+
+        // data collct by user email
+        app.get('/services/:email', async (req, res) => {
+            const email = req.params.email
+            console.log(email)
+            const query = { email: email }
+            const result = await ServiceDB.find(query).toArray()
+            res.send(result)
+        })
+
 
 
         await client.connect();
