@@ -22,6 +22,7 @@ const client = new MongoClient(uri, {
 async function run() {
     try {
         const ServiceDB = client.db("ServiceDB").collection("service");
+        const ReviewDB = client.db("ReviewDB").collection("review");
 
         // data saved 
         app.post('/allSrvices', async (req, res) => {
@@ -35,6 +36,14 @@ async function run() {
             const result = await ServiceDB.find().limit(6).toArray()
             res.send(result)
         })
+
+        // get all data for services page
+        app.get('/Services', async (req, res) => {
+            const result = await ServiceDB.find().toArray()
+            res.send(result)
+        })
+
+
 
         // data collct by user email
         app.get('/services/:email', async (req, res) => {
@@ -55,21 +64,21 @@ async function run() {
         // get one data by id
         app.get('/service/:id', async (req, res) => {
             const id = req.params.id
-            console.log(id)
             const query = { _id: new ObjectId(id) }
             const result = await ServiceDB.findOne(query)
             res.send(result)
         })
 
-        app.put('/update-job/:id', async (req, res) => {
+        // update service
+        app.put('/updateservice/:id', async (req, res) => {
             const id = req.params.id
-            const jobdata = req.body
+            const servicedata = req.body
             const updated = {
-                $set: jobdata,
+                $set: servicedata,
             }
             const query = { _id: new ObjectId(id) }
             const options = { upsert: true }
-            const result = await database.updateOne(query, updated, options)
+            const result = await ServiceDB.updateOne(query, updated, options)
             res.send(result)
         })
 
