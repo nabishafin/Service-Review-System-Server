@@ -104,6 +104,39 @@ async function run() {
             res.send(result)
         })
 
+        // get value by id api
+
+        app.get('/review/:id', async (req, res) => {
+            const id = req.params.id
+            const query = { _id: new ObjectId(id) }
+            const result = await ReviewDB.findOne(query)
+            res.send(result)
+        })
+
+        // update review
+        app.put('/updatereview/:id', async (req, res) => {
+            const id = req.params.id
+            const reviewdata = req.body
+            const updated = {
+                $set: reviewdata,
+            }
+            const query = { _id: new ObjectId(id) }
+            const options = { upsert: true }
+            const result = await ReviewDB.updateOne(query, updated, options)
+            res.send(result)
+        })
+
+        // deleted review
+
+        app.delete('/review/:id', async (req, res) => {
+            const id = req.params.id
+            const query = { _id: new ObjectId(id) }
+            const result = await ReviewDB.deleteOne(query)
+            res.send(result)
+        })
+
+
+
         await client.connect();
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
