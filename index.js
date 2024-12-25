@@ -37,7 +37,7 @@ async function run() {
             res.send(result)
         })
 
-        // get all data for services page
+        // get all data for  services page
         app.get('/Services', async (req, res) => {
             const result = await ServiceDB.find().toArray()
             res.send(result)
@@ -90,8 +90,18 @@ async function run() {
             res.send(result)
         })
 
+        app.get('/reviews', async (req, res) => {
+            const result = await ReviewDB.find().toArray()
+            res.send(result)
+        })
 
-
+        // get all review data by email
+        app.get('/reviewss/:email', async (req, res) => {
+            const email = req.params.email
+            const query = { email: email }
+            const result = await ReviewDB.find(query).toArray()
+            res.send(result)
+        })
 
         await client.connect();
         // Send a ping to confirm a successful connection
