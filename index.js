@@ -96,9 +96,10 @@ async function run() {
         })
 
         // get all review data by email
-        app.get('/reviewss/:email', async (req, res) => {
+        app.get('/reviews/:email', async (req, res) => {
             const email = req.params.email
-            const query = { email: email }
+            console.log(email)
+            const query = { 'user.email': email }
             const result = await ReviewDB.find(query).toArray()
             res.send(result)
         })
