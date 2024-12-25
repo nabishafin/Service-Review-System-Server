@@ -83,6 +83,16 @@ async function run() {
         })
 
 
+        // review added by post methods
+        app.post('/allreview', async (req, res) => {
+            const reviewdata = req.body
+            const result = await ReviewDB.insertOne(reviewdata)
+            res.send(result)
+        })
+
+
+
+
         await client.connect();
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
