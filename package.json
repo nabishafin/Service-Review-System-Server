@@ -1,5 +1,5 @@
 {
-  "name": "service-review-system-server",
+  "name": "system-review-server",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {

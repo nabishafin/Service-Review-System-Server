@@ -4,16 +4,15 @@ require('dotenv').config()
 const port = process.env.PORT || 5000
 const app = express()
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
-app.use(cors(
-    {
-        origin: [
-            'http://localhost:5173/',
-            'https://service-review-system-clint.web.app',
-            'https://service-review-system-clint.firebaseapp.com'
-        ],
-        credentials: true
-    }
-))
+app.use(cors({
+    origin: [
+        'http://localhost:5173/',
+        'https://service-review-system-clint.web.app',
+        'https://service-review-system-clint.firebaseapp.com',
+
+    ],
+    credentials: true
+}));
 app.use(express.json())
 
 
@@ -148,7 +147,7 @@ async function run() {
 
         await client.connect();
         // Send a ping to confirm a successful connection
-        // await client.db("admin").command({ ping: 1 });
+        await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
         // Ensures that the client will close when you finish/error
