@@ -6,12 +6,12 @@ const app = express()
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 app.use(cors({
     origin: [
-        'http://localhost:5173/',
+        'http://localhost:5173',
         'https://service-review-system-clint.web.app',
         'https://service-review-system-clint.firebaseapp.com',
-        'https://system-review-server.vercel.app/'
+        'https://system-review-server.vercel.app'
     ],
-    credentials: true
+    credentials: false
 }));
 app.use(express.json())
 
