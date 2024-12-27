@@ -9,7 +9,7 @@ app.use(cors({
         'http://localhost:5173/',
         'https://service-review-system-clint.web.app',
         'https://service-review-system-clint.firebaseapp.com',
-
+        'https://system-review-server.vercel.app/'
     ],
     credentials: true
 }));
@@ -145,9 +145,9 @@ async function run() {
 
 
 
-        await client.connect();
+        // await client.connect();
         // Send a ping to confirm a successful connection
-        await client.db("admin").command({ ping: 1 });
+        // await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
         // Ensures that the client will close when you finish/error
