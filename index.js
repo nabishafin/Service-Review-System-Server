@@ -4,20 +4,20 @@ require("dotenv").config();
 const port = process.env.PORT || 5000;
 const app = express();
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
+
 const corsOptions = {
   origin: [
     "http://localhost:5173",
-    "https://service-review-system-client.vercel.app/",
-
+    "https://service-review-system-client.vercel.app" // ❌ No trailing slash here
   ],
-  credentials: true, //access-control-allow-credentials:true
+  credentials: true,
 };
+
 app.use(cors(corsOptions));
 app.use(express.json());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.dkwhsex.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -31,26 +31,26 @@ async function run() {
     const ServiceDB = client.db("ServiceDB").collection("service");
     const ReviewDB = client.db("ReviewDB").collection("review");
 
-    // data saved
+    // POST service
     app.post("/allSrvices", async (req, res) => {
       const Servicedata = req.body;
       const result = await ServiceDB.insertOne(Servicedata);
       res.send(result);
     });
 
-    // get data for ui
+    // GET limited services
     app.get("/allService", async (req, res) => {
       const result = await ServiceDB.find().limit(6).toArray();
       res.send(result);
     });
 
-    // get all data for  services page
+    // GET all services
     app.get("/Services", async (req, res) => {
       const result = await ServiceDB.find().toArray();
       res.send(result);
     });
 
-    // data collct by user email
+    // GET services by email
     app.get("/services/:email", async (req, res) => {
       const email = req.params.email;
       const query = { email: email };
@@ -58,7 +58,7 @@ async function run() {
       res.send(result);
     });
 
-    // delete job post
+    // DELETE service
     app.delete("/service/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
@@ -66,7 +66,7 @@ async function run() {
       res.send(result);
     });
 
-    // get one data by id
+    // GET service by id
     app.get("/service/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
@@ -74,42 +74,39 @@ async function run() {
       res.send(result);
     });
 
-    // update service
+    // UPDATE service
     app.put("/updateservice/:id", async (req, res) => {
       const id = req.params.id;
       const servicedata = req.body;
-      const updated = {
-        $set: servicedata,
-      };
+      const updated = { $set: servicedata };
       const query = { _id: new ObjectId(id) };
       const options = { upsert: true };
       const result = await ServiceDB.updateOne(query, updated, options);
       res.send(result);
     });
 
-    // review added by post methods
+    // POST review
     app.post("/allreview", async (req, res) => {
       const reviewdata = req.body;
       const result = await ReviewDB.insertOne(reviewdata);
       res.send(result);
     });
 
+    // GET all reviews
     app.get("/reviews", async (req, res) => {
       const result = await ReviewDB.find().toArray();
       res.send(result);
     });
 
-    // get all review data by email
+    // GET reviews by email
     app.get("/reviews/:email", async (req, res) => {
       const email = req.params.email;
-      console.log(email);
       const query = { "user.email": email };
       const result = await ReviewDB.find(query).toArray();
       res.send(result);
     });
 
-    // get value by id api
-
+    // GET review by id
     app.get("/review/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
@@ -117,21 +114,18 @@ async function run() {
       res.send(result);
     });
 
-    // update review
+    // UPDATE review
     app.put("/updatereview/:id", async (req, res) => {
       const id = req.params.id;
       const reviewdata = req.body;
-      const updated = {
-        $set: reviewdata,
-      };
+      const updated = { $set: reviewdata };
       const query = { _id: new ObjectId(id) };
       const options = { upsert: true };
       const result = await ReviewDB.updateOne(query, updated, options);
       res.send(result);
     });
 
-    // deleted review
-
+    // DELETE review
     app.delete("/review/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
@@ -139,17 +133,9 @@ async function run() {
       res.send(result);
     });
 
-
-
-    // await client.connect();
-    // Send a ping to confirm a successful connection
-    // await client.db("admin").command({ ping: 1 });
-    console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!"
-    );
+    console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
-    // Ensures that the client will close when you finish/error
-    // await client.close();
+    // Do not close MongoDB connection if using in serverless environment like Vercel
   }
 }
 run().catch(console.dir);
@@ -159,8 +145,7 @@ app.get("/", (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.log(`Server listening on port ${port}`);
 });
 
-// export the app for vercel serverless functions
 module.exports = app;
