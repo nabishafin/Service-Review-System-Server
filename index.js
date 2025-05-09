@@ -7,8 +7,8 @@ const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const corsOptions = {
   origin: [
     "http://localhost:5173",
-    "https://service-review-system-clint.web.app",
-    "https://service-review-system-clint.firebaseapp.com"
+    "https://service-review-system-client.vercel.app",
+
   ],
   credentials: true, //access-control-allow-credentials:true
 };
